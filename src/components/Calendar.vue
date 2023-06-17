@@ -84,7 +84,7 @@
         </Menu>
       </div>
     </header>
-    <div ref="container" class="isolate flex flex-auto flex-col overflow-auto bg-white">
+    <div ref="container" class="isolate flex flex-auto flex-col overflow-auto bg-white" style="max-height: 600px;">
       <div style="width: 165%" class="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full">
         <div ref="containerNav" class="sticky top-0 z-30 flex-none bg-white shadow ring-1 ring-black ring-opacity-5 sm:pr-8">
           <div class="grid grid-cols-7 text-sm leading-6 text-gray-500 sm:hidden">
@@ -293,24 +293,27 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, EllipsisHorizontalIcon } from '@heroicons/vue/20/solid'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { format, startOfToday } from 'date-fns'
 
-const container = ref(null)
-const containerNav = ref(null)
-const containerOffset = ref(null)
+const container = ref<HTMLElement | null>(null)
+const containerNav = ref<HTMLElement | null>(null)
+const containerOffset = ref<HTMLElement | null>(null)
 
 const today = startOfToday()
 
 onMounted(() => {
-  // Set the container scroll position based on the current time.
+  // Set the container scroll position based on the current time. // Should change this to use date-fns
   const currentMinute = new Date().getHours() * 60
-  container.value.scrollTop =
-    ((container.value.scrollHeight - containerNav.value.offsetHeight - containerOffset.value.offsetHeight) *
-      currentMinute) /
-    1440
+
+  if (container.value && containerNav.value && containerOffset.value) {
+    container.value.scrollTop =
+      ((container.value.scrollHeight - containerNav.value.offsetHeight - containerOffset.value.offsetHeight) *
+        currentMinute) /
+      1440
+  }
 })
 </script>
